@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "target": "es5",
+    "noEmit": true,
+    "sourceMap": true,
+    "outDir": "dist"
+  },
+  "lib": ["es6"]
+}
