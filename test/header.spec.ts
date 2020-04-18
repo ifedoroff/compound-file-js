@@ -16,7 +16,7 @@ DUMMY_HEADER.splice(Header.FLAG_POSITION.MINI_STREAM_CUTOFF_SIZE_POSITION, 4, ..
 DUMMY_HEADER.splice(Header.FLAG_POSITION.FIRST_DIFAT_SECTOR, 4, ...ENDOFCHAIN_MARK);
 DUMMY_HEADER.splice(Header.FLAG_POSITION.DIFAT_ENTRIES_FIRST_POSITION, 436, ...initializedWith(436, 0xff));
 
-function dummyHeader(): number[] {
+export function dummyHeader(): number[] {
     const result = [];
     result.push(...DUMMY_HEADER);
     return result;

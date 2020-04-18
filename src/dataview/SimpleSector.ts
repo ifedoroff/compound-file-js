@@ -1,7 +1,7 @@
 import {Sector} from "./Sector";
 import {CFDataview} from "./СFDataview";
 
-class SimpleSector implements Sector {
+export class SimpleSector implements Sector {
     private readonly view: CFDataview;
     private readonly position: number;
 

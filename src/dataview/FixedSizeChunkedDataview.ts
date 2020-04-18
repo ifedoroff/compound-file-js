@@ -13,7 +13,7 @@ export class FixedSizeChunkedDataview implements CFDataview {
     constructor(chunkSize: number, dataChunks?: number[]|CFDataview[]) {
         this.chunkSize = chunkSize;
         if(dataChunks != null) {
-            if(dataChunks[0] instanceof Number) {
+            if(typeof dataChunks[0] === 'number') {
                 if(dataChunks.length % chunkSize !== 0) throw new Error();
                 const dataLength = dataChunks.length;
                 const rawView = new SimpleDataview(dataChunks as number[]);
@@ -27,7 +27,7 @@ export class FixedSizeChunkedDataview implements CFDataview {
     }
 
     writeAt(position: number, bytes: number[]): CFDataview {
-        return this.chunks[position / 512].writeAt(position%512, bytes);
+        return this.chunks[Math.floor(position / 512)].writeAt(position%512, bytes);
     }
 
     getSize(): number {
@@ -42,12 +42,11 @@ export class FixedSizeChunkedDataview implements CFDataview {
         return result;
     }
 
-
     subView(start: number, end?: number): CFDataview {
         if(end == null) throw new Error("'end' parameter is mandatory");
-        if(start/this.chunkSize !== (end - 1)/this.chunkSize) throw new Error(`Can only get subview enclosed by one chunk. Actual values: ${start} - ${end}`);
+        if(Math.floor(start/this.chunkSize) !== Math.floor((end - 1)/this.chunkSize)) throw new Error(`Can only get subview enclosed by one chunk. Actual values: ${start} - ${end}`);
         if(start === end) throw new Error("Cannot get subview of size 0");
-        const chunk = this.chunks[start / this.chunkSize];
+        const chunk = this.chunks[Math.floor(start / this.chunkSize)];
         if(end % this.chunkSize === 0) {
             return chunk.subView(start % this.chunkSize);
         } else {

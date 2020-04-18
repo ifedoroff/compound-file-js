@@ -16,10 +16,10 @@ export const DIFF_BETWEEN_EPOCHS_1970_1601 = 11644473599996;
  * @param filler
  */
 export function fill(target: number[], filler: number[]): void {
-    if(target.length % filler.length === 0) throw new Error();
+    if(target.length % filler.length !== 0) throw new Error();
     const step = filler.length;
     for (let i = 0; i < target.length; i+=step) {
-        target.push(...filler);
+        target.splice(i, 4, ...filler);
     }
 }
 
@@ -28,6 +28,14 @@ export function isFreeSectOrNoStream(value: number[]|number) {
         return equal(FREESECT_MARK_OR_NOSTREAM, value);
     } else {
         return value === FREESECT_MARK_OR_NOSTREAM_INT;
+    }
+}
+
+export function isEndOfChain(value: number[]|number) {
+    if(value instanceof Array) {
+        return equal(ENDOFCHAIN_MARK, value);
+    } else {
+        return value === ENDOFCHAIN_MARK_INT;
     }
 }
 
@@ -41,8 +49,14 @@ export function equal (buf1: number[], buf2: number[]): boolean {
 }
 
 
-export function initializedWith(size: number, value: number): number[]{
+export function initializedWith(size: number, value: number|number[]): number[]{
     const data = new Array(size);
-    data.fill(value);
+    if(value instanceof Array) {
+        for (let i = 0; i < size; i+=value.length) {
+            data.splice(i, value.length, ...value);
+        }
+    } else {
+        data.fill(value);
+    }
     return data;
 }
