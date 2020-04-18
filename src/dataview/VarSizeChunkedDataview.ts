@@ -19,7 +19,7 @@ export class VariableSizeChunkedDataView implements CFDataview {
         this.size = size;
     }
 
-    writeAt(position: number, bytes: Uint8Array): CFDataview {
+    writeAt(position: number, bytes: number[]): CFDataview {
         if(position < 0) throw new Error("Cannot write at index < 0: start = " + position);
         if(position + bytes.length > this.size) throw new Error(`Sub-view should has end index < ${this.size}: end = ${position + bytes.length - 1}`);
         let startingPositionInFirstView: number;
@@ -35,15 +35,15 @@ export class VariableSizeChunkedDataView implements CFDataview {
         const currentView: CFDataview = currentEntry[1];
         let bytesToWrite = Math.min(currentView.subView(startingPositionInFirstView).getSize(), remaining);
         remaining -= bytesToWrite;
-            currentView.writeAt(startingPositionInFirstView, bytes.subarray(0, bytesToWrite));
+            currentView.writeAt(startingPositionInFirstView, bytes.slice(0, bytesToWrite));
         while(remaining > 0) {
-            currentEntry = this.viewMap.higherEntry(currentKey)
+            currentEntry = this.viewMap.higherEntry(currentKey);
             if(currentEntry == null) {
                 throw new Error("Preliminary end of chain");
             } else {
                 bytesToWrite = Math.min(currentView.getSize(), remaining);
                 remaining -= bytesToWrite;
-                currentView.writeAt(0, bytes.subarray(0, bytesToWrite));
+                currentView.writeAt(0, bytes.slice(0, bytesToWrite));
             }
         }
         return this;
@@ -53,11 +53,11 @@ export class VariableSizeChunkedDataView implements CFDataview {
         return this.size;
     }
 
-    getData(): Uint8Array {
-        const result = new Uint8Array(this.getSize());
+    getData(): number[] {
+        const result = new Array(this.getSize());
         let index = 0;
         for (const view of Array.from(this.viewMap.values())) {
-            result.set(view.getData(), index);
+            result.push(...view.getData());
             index += view.getSize();
         }
         return result;
@@ -72,7 +72,7 @@ export class VariableSizeChunkedDataView implements CFDataview {
         if(start >= this.getSize()) throw new Error(`Sub-view should not exceed the size of a view: size = ${this.getSize()}`);
         if(start > end) throw new Error(`Sub-view start should be less or equal to end: start(${start}) / end(${end})`);
         if(start === end) {
-            return new SimpleDataview(new Uint8Array(0));
+            return new SimpleDataview(new Array(0));
         }
         const last = end - 1;
         const firstEntry = this.viewMap.ceilingEntry(start);
@@ -107,12 +107,12 @@ export class VariableSizeChunkedDataView implements CFDataview {
         throw new Error("Unsupported Operation");
     }
 
-    fill(filler: Uint8Array): CFDataview {
-        this.viewMap.forEach((view, key) => view.fill(filler));
+    fill(filler: number[]): CFDataview {
+        this.viewMap.forEach((view) => view.fill(filler));
         return this;
     }
 
-    readAt(position: number, length: number): Uint8Array {
+    readAt(position: number, length: number): number[] {
         return this.subView(position, position + length).getData();
     }
 

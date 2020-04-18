@@ -14,7 +14,7 @@ class SimpleSector implements Sector {
         return this.position;
     }
 
-    writeAt(position: number, bytes: Uint8Array): Sector {
+    writeAt(position: number, bytes: number[]): Sector {
         this.view.writeAt(position, bytes);
         return this;
     }
@@ -23,7 +23,7 @@ class SimpleSector implements Sector {
         return this.view.getSize();
     }
 
-    getData(): Uint8Array {
+    getData(): number[] {
         return this.view.getData();
     }
 
@@ -35,16 +35,16 @@ class SimpleSector implements Sector {
         return this.view.allocate(length);
     }
 
-    fill(filler: Uint8Array): Sector {
+    fill(filler: number[]): Sector {
         this.view.fill(filler);
         return this;
     }
 
-    readAt(position: number, length: number): Uint8Array {
+    readAt(position: number, length: number): number[] {
         return this.view.readAt(position, length);
     }
 
-    static from(view: CFDataview, position: number, filler?: Uint8Array): Sector {
+    static from(view: CFDataview, position: number, filler?: number[]): Sector {
         const simpleSector = new SimpleSector(view, position);
         if(filler != null) {
             simpleSector.fill(filler);

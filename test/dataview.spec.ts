@@ -5,61 +5,61 @@ import {VariableSizeChunkedDataView} from "../src/dataview/VarSizeChunkedDatavie
 
 describe('should throw exception on overflow during write operation', () => {
     it('Simple Data View', () => {
-        let view = new SimpleDataview(new Uint8Array(0));
-        expect(() => view.writeAt(0, new Uint8Array([1]))).to.throw();
-        view = new SimpleDataview(new Uint8Array(512));
-        expect(() => view.writeAt(510, new Uint8Array(6))).to.throw();
+        let view = new SimpleDataview(new Array(0));
+        expect(() => view.writeAt(0, [1])).to.throw();
+        view = new SimpleDataview(new Array(512));
+        expect(() => view.writeAt(510, new Array(6))).to.throw();
     });
 
     it('Referencing Subview', () => {
-        let view = new SimpleDataview(new Uint8Array(1)).subView(0, 1);
-        expect(() => view.writeAt(1, new Uint8Array([1]))).to.throw();
-        view = new SimpleDataview(new Uint8Array(512)).subView(510);
-        expect(() => view.writeAt(0, new Uint8Array(6))).to.throw();
+        let view = new SimpleDataview(new Array(1)).subView(0, 1);
+        expect(() => view.writeAt(1,[1])).to.throw();
+        view = new SimpleDataview(new Array(512)).subView(510);
+        expect(() => view.writeAt(0, new Array(6))).to.throw();
     });
 
     it('Fixed Size Chunked Dataview', () => {
         const view = new FixedSizeChunkedDataview(512,
-        [new SimpleDataview(new Uint8Array(512)), new SimpleDataview(new Uint8Array(512))]);
-        expect(() => view.writeAt(1024, new Uint8Array([1]))).to.throw();
-        expect(() => view.writeAt(1020, new Uint8Array(6))).to.throw();
+        [new SimpleDataview(new Array(512)), new SimpleDataview(new Array(512))]);
+        expect(() => view.writeAt(1024, [1])).to.throw();
+        expect(() => view.writeAt(1020, new Array(6))).to.throw();
     });
 
     it('Var Size Chunked Dataview', () => {
         const view = new VariableSizeChunkedDataView(
-            [new SimpleDataview(new Uint8Array(64)), new SimpleDataview(new Uint8Array(128))]
+            [new SimpleDataview(new Array(64)), new SimpleDataview(new Array(128))]
         );
-        expect(() => view.writeAt(196, new Uint8Array([1]))).to.throw();
-        expect(() => view.writeAt(190, new Uint8Array(6))).to.throw();
+        expect(() => view.writeAt(196, [1])).to.throw();
+        expect(() => view.writeAt(190, new Array(6))).to.throw();
     });
 });
 describe('test allocate', () => {
     it('Simple Data View', () => {
-        const view = new SimpleDataview(new Uint8Array(0));
+        const view = new SimpleDataview(new Array(0));
         expect(() => view.allocate(1)).to.throw();
     });
 
     it('Referencing Subview', () => {
-        const view = new SimpleDataview(new Uint8Array(1)).subView(0);
+        const view = new SimpleDataview(new Array(1)).subView(0);
         expect(() => view.allocate(1)).to.throw();
     });
 
     it('Fixed Size Chunked Dataview', () => {
         const view = new FixedSizeChunkedDataview(64,
-            [new SimpleDataview(new Uint8Array(64))]);
+            [new SimpleDataview(new Array(64))]);
         expect(() => view.allocate(1)).to.throw();
         expect(() => view.allocate(64)).to.not.throw();
     });
 
     it('Var Size Chunked Dataview', () => {
-        const view = new VariableSizeChunkedDataView([new SimpleDataview(new Uint8Array(0)), new SimpleDataview(new Uint8Array(0))]);
+        const view = new VariableSizeChunkedDataView([new SimpleDataview(new Array(0)), new SimpleDataview(new Array(0))]);
         expect(() => view.allocate(1)).to.throw();
     });
 });
 
 describe('test subview', () => {
     it('Simple Data View', () => {
-        const view = new SimpleDataview(new Uint8Array(64));
+        const view = new SimpleDataview(new Array(64));
         expect(() => view.subView(64)).to.throw();
         expect(() => view.subView(63, 65)).to.throw();
         expect(view.subView(0, 0).getSize()).eq(0);
@@ -70,7 +70,7 @@ describe('test subview', () => {
     });
 
     it('Referencing Subview', () => {
-        const view = new SimpleDataview(new Uint8Array(1)).subView(0);
+        const view = new SimpleDataview(new Array(1)).subView(0);
         expect(view.subView(0).getSize()).eq(1);
         expect(() => view.subView(1)).to.throw();
         expect(view.subView(0, 0).getSize()).eq(0);
@@ -80,7 +80,7 @@ describe('test subview', () => {
 
     it('Fixed Size Chunked Dataview', () => {
         const view = new FixedSizeChunkedDataview(64,
-            [new SimpleDataview(new Uint8Array(64)), new SimpleDataview(new Uint8Array(64))]);
+            [new SimpleDataview(new Array(64)), new SimpleDataview(new Array(64))]);
         expect(() => view.subView(1)).to.throw();
         expect(() => view.subView(0, 0)).to.throw();
         expect(() => view.subView(63, 65)).to.throw();
@@ -91,7 +91,7 @@ describe('test subview', () => {
     });
 
     it('Var Size Chunked Dataview', () => {
-        const view = new VariableSizeChunkedDataView([new SimpleDataview(new Uint8Array(64)), new SimpleDataview(new Uint8Array(32))]);
+        const view = new VariableSizeChunkedDataView([new SimpleDataview(new Array(64)), new SimpleDataview(new Array(32))]);
         expect(() => view.subView(96)).to.throw();
         expect(view.subView(32).getSize()).eq(64);
         expect(view.subView(0, 0).getSize()).eq(0);

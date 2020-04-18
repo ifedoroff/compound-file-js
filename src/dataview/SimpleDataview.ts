@@ -8,17 +8,17 @@ import {fill} from "../utils"
  */
 export class SimpleDataview implements CFDataview {
 
-    private readonly data: Uint8Array;
+    private readonly data: number[];
 
-    constructor(data: NonNullable<Uint8Array>) {
+    constructor(data: NonNullable<number[]>) {
         this.data = data;
     }
 
-    writeAt(position: number, bytes:Uint8Array): CFDataview {
-        if(position + bytes.byteLength > this.data.length) {
-            throw new Error(`${bytes.byteLength} + ${position} > ${this.data.byteLength}`);
+    writeAt(position: number, bytes:number[]): CFDataview {
+        if(position + bytes.length > this.data.length) {
+            throw new Error(`${bytes.length} + ${position} > ${this.data.length}`);
         }
-        this.data.set(bytes, position);
+        this.data.splice(position, bytes.length, ...bytes);
         return this;
     }
 
@@ -26,7 +26,7 @@ export class SimpleDataview implements CFDataview {
         return this.data.length;
     }
 
-    public getData(): Uint8Array {
+    public getData(): number[] {
         return this.data;
     }
 
@@ -59,13 +59,13 @@ export class SimpleDataview implements CFDataview {
         throw new Error("Unsupported operation");
     }
 
-    fill(filler: Uint8Array): CFDataview {
+    fill(filler: number[]): CFDataview {
         fill(this.data, filler);
         return this;
     }
 
-    readAt(position: number, length: number): Uint8Array {
-            return this.data.subarray(position, position + length);
+    readAt(position: number, length: number): number[] {
+            return this.data.slice(position, position + length);
     }
 
     isEmpty(): boolean {

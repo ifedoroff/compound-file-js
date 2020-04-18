@@ -17,7 +17,7 @@ export class ReferencingSubview implements CFDataview {
         this.end = end;
     }
 
-    writeAt(position: number, bytes: Uint8Array): CFDataview {
+    writeAt(position: number, bytes: number[]): CFDataview {
         return this.delegate.writeAt(this.start + position, bytes);
     }
 
@@ -25,7 +25,7 @@ export class ReferencingSubview implements CFDataview {
         return this.capacity;
     }
 
-    public getData(): Uint8Array {
+    public getData(): number[] {
         return this.delegate.readAt(this.start, this.end - this.start);
     }
 
@@ -55,7 +55,7 @@ export class ReferencingSubview implements CFDataview {
         throw new Error("Unsupported operation");
     }
 
-    fill(filler: Uint8Array): CFDataview {
+    fill(filler: number[]): CFDataview {
         if(this.getSize() % filler.length !== 0) throw new Error();
         const step: number = filler.length;
         for (let i = 0; i < this.getSize(); i+=step) {
@@ -64,7 +64,7 @@ export class ReferencingSubview implements CFDataview {
         return this;
     }
 
-    readAt(position: number, length: number): Uint8Array {
+    readAt(position: number, length: number): number[] {
         if(this.start + position >= this.end) {
             throw new Error(`Starting position cannot be greater then subview 'end'. (starting position: ${position} < view end: ${this.end})`);
         }

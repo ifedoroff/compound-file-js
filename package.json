@@ -32,6 +32,8 @@
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {
+    "@types/long": "^4.0.1",
+    "long": "^4.0.0",
     "ts-treemap": "^1.0.0"
   }
 }

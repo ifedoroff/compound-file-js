@@ -2,6 +2,7 @@ import {expect} from "chai";
 import {NodeFactory, RedBlackTree} from "../src/tree/RedBlackTree";
 import {Color, TreeNode} from "../src/tree/Node";
 import {TreeBuilder} from "../src/tree/TreeBuilder";
+import "../src/Long"
 
 const nodeFactory: NodeFactory<TreeNode<TreeNode<any, number>, number>, number> = {
     create: (value: number, color: Color) => new TreeNode<TreeNode<any, number>, number>(value, color)
@@ -9,7 +10,7 @@ const nodeFactory: NodeFactory<TreeNode<TreeNode<any, number>, number>, number> 
 
 const comparator = (o1: number, o2: number) => o1 - o2;
 
-describe('insert into red black tree', () => {
+describe('insert nodes in red black tree', () => {
     it('insert root', () => {
         const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
         tree.insert(1);
@@ -197,7 +198,7 @@ describe('insert into red black tree', () => {
 
 });
 
-describe('delete from red black tree', () => {
+describe('delete nodes of red black tree', () => {
     it('simple delete', () => {
         const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
         for (let i = 1; i < 9; i++) {
@@ -232,7 +233,7 @@ describe('delete from red black tree', () => {
         expect(tree.getRoot().getLeftChild().getValue()).eq(1);
         expect(tree.getRoot().getLeftChild().getRightChild().getColor()).eq(Color.RED);
         expect(tree.getRoot().getLeftChild().getRightChild().getValue()).eq(3);
-    })
+    });
 
     it('chaotic delete', () => {
         const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
