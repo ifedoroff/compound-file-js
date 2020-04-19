@@ -23,7 +23,7 @@ describe('Sectors test', () => {
     });
 
     it('allocation of the first sector', () => {
-        let backedDataView = new FixedSizeChunkedDataview(512);
+        const backedDataView = new FixedSizeChunkedDataview(512);
         const sectors = new Sectors(backedDataView, header);
         const allocated = sectors.allocate();
         expect(allocated).not.eq(null);

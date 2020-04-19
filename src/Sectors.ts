@@ -27,9 +27,9 @@ export class Sectors {
     }
 
     readSectors(): void {
-        //Skip first 512 bytes designated for Header
+        // Skip first 512 bytes designated for Header
         if(!this.dataView.isEmpty()) {
-            if(this.dataView.getSize() % this.sectorShift != 0)
+            if(this.dataView.getSize() % this.sectorShift !== 0)
                 throw new Error();
             for (let i = 1; i < this.dataView.getSize() / this.sectorShift; i++) {
                 this.sectors.push(SimpleSector.from(this.dataView.subView(i * this.sectorShift, (i + 1) * this.sectorShift), this.sectors.length));

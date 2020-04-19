@@ -14,7 +14,7 @@ import {
 import {FixedSizeChunkedDataview} from "../src/dataview/FixedSizeChunkedDataview";
 
 function difatSector() {
-    let header: Header = Header.empty(new SimpleDataview(initializedWith(512, 0)));
+    const header: Header = Header.empty(new SimpleDataview(initializedWith(512, 0)));
     return new Sectors(new FixedSizeChunkedDataview(Header.SECTOR_SHIFT_VERSION_3_INT), header).allocateDIFAT();
 }
 

@@ -23,7 +23,7 @@ export class DifatEntries {
         if(this.difatEntries.length >= Header.DIFAT_ENTRIES_LIMIT_IN_HEADER) {
             throw new Error("Unable to register additional FAT sector in Header");
         }
-        this.view.writeAt(this.difatEntries.length * 4, Long.fromValue(sectorPosition).toBytesLE());
+        this.view.writeAt(this.difatEntries.length * 4, Long.fromValue(sectorPosition).to4BytesLE());
         this.difatEntries.push(sectorPosition);
     }
     isFull(): boolean {

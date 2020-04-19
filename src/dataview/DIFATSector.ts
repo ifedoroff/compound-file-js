@@ -12,7 +12,7 @@ export class DIFATSector implements Sector {
     constructor(delegate: Sector) {
         this.delegate = delegate;
         for (let i = 0; i < delegate.getSize() - 4 - 1; i+=4) {
-            let fatSectorPosition = delegate.subView(i, i + 4).getData();
+            const fatSectorPosition = delegate.subView(i, i + 4).getData();
             if(isFreeSectOrNoStream(fatSectorPosition)) {
                 break;
             } else {
@@ -26,12 +26,12 @@ export class DIFATSector implements Sector {
     }
 
     writeAt(position: number, bytes: number[]): CFDataview {
-        if(isEndOfChain(bytes) && position != 508)
+        if(isEndOfChain(bytes) && position !== 508)
             throw new Error();
         if(isFreeSectOrNoStream(bytes) && this.fatSectors.length > position / 4)
             throw new Error();
-        if(!isEndOfChain(bytes) && !isFreeSectOrNoStream(bytes) && position != 508) {
-            if(this.fatSectors.length != position / 4) {
+        if(!isEndOfChain(bytes) && !isFreeSectOrNoStream(bytes) && position !== 508) {
+            if(this.fatSectors.length !== position / 4) {
                 throw new Error();
             }
         }
