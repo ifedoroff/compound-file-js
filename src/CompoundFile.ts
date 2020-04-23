@@ -14,7 +14,7 @@ import {FixedSizeChunkedDataview} from "./dataview/FixedSizeChunkedDataview";
 import {ENDOFCHAIN_MARK, ENDOFCHAIN_MARK_INT} from "./utils";
 import { DirectoryEntry } from "./directory/DirectoryEntry";
 import * as Long from "long";
-import "../src/Long";
+import "Long";
 import {RootStorageDirectoryEntry} from "./directory/RootStorageDirectoryEntry";
 import {StorageDirectoryEntry} from "./directory/StorageDirectoryEntry";
 import {StreamDirectoryEntry} from "./directory/StreamDirectoryEntry";

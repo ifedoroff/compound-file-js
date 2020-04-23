@@ -6,9 +6,8 @@
     "clean": "del-cli dist",
     "lint": "tslint --project tsconfig.json",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "build:js": "babel src --out-file dist/compound-file.js --extensions \".ts\" --source-maps inline",
     "build:tsc": "tsc",
-    "build": "npm-run-all clean test lint build:tsc build:js"
+    "build": "npm-run-all clean test lint build:tsc"
   },
   "keywords": [],
   "author": "",

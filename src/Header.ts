@@ -31,8 +31,8 @@ export class Header {
     public static readonly SECTOR_SHIFT_VERSION_3_INT: number = Math.pow(2, Long.fromBytesLE(Header.SECTOR_SHIFT_VERSION_3).toNumber());
     public static readonly MINI_SECTOR_SHIFT_VERSION_3 = [0x06, 0x00];
     public static readonly MINI_SECTOR_SHIFT_VERSION_3_INT = Math.pow(2, Long.fromBytesLE(Header.MINI_SECTOR_SHIFT_VERSION_3).toNumber());
-    public static readonly MINI_STREAM_CUTOFF_SIZE = [0x00, 0x01, 0x00, 0x00];
-    public static readonly MINI_STREAM_CUTOFF_SIZE_INT = Long.fromBytesLE([0x00, 0x01, 0x00, 0x00]).toNumber();
+    public static readonly MINI_STREAM_CUTOFF_SIZE_INT = 0x00001000;
+    public static readonly MINI_STREAM_CUTOFF_SIZE = Long.fromValue(Header.MINI_STREAM_CUTOFF_SIZE_INT).to4BytesLE()
     public static readonly HEADER_LENGTH = 512;
     public static readonly DIFAT_ENTRIES_LIMIT_IN_HEADER: number = 109;
     private readonly dataView: CFDataview;

@@ -4,9 +4,9 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "target": "es5",
-    "noEmit": true,
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "declaration": true
   },
   "lib": ["es6"]
 }
