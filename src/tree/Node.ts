@@ -2,12 +2,12 @@ export enum Color {
     RED, BLACK
 }
 
-export class TreeNode<N extends TreeNode<any, T>, T>{
+export class TreeNode<T>{
 
     private readonly value: T;
-    private leftChild: N = null;
-    private rightChild: N = null;
-    private parent: N = null;
+    private leftChild: TreeNode<T> = null;
+    private rightChild: TreeNode<T> = null;
+    private parent: TreeNode<T> = null;
     private color: Color;
 
     constructor(value: T, color: Color) {
@@ -16,11 +16,11 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         this.value = value;
     }
 
-    getLeftChild(): N {
+    getLeftChild(): TreeNode<T> {
         return this.leftChild;
     }
 
-    setLeftChild(value: N): void {
+    setLeftChild(value:  TreeNode<T>): void {
         this.leftChild = value;
         if(this.leftChild != null) {
             this.leftChild.setParent(this);
@@ -31,24 +31,24 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         return this.value;
     }
 
-    setRightChild(value: N): void {
+    setRightChild(value:  TreeNode<T>): void {
         this.rightChild = value;
         if(this.rightChild != null) {
             this.rightChild.setParent(this);
         }
     }
 
-    getRightChild(): N {
+    getRightChild(): TreeNode<T> {
         return this.rightChild;
     }
 
 
-    getParent(): N {
+    getParent(): TreeNode<T> {
         return this.parent;
     }
 
 
-    setParent(parent: N): void {
+    setParent(parent:  TreeNode<T>): void {
         this.parent = parent;
     }
 
@@ -60,15 +60,15 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         return this.leftChild != null && this.rightChild != null;
     }
 
-    isLeftChild(node: N): boolean {
+    isLeftChild(node:  TreeNode<T>): boolean {
         return this.leftChild === node;
     }
 
-    isRightChild(node: N): boolean {
+    isRightChild(node:  TreeNode<T>): boolean {
         return this.rightChild === node;
     }
 
-    deleteChild(node: N): void {
+    deleteChild(node:  TreeNode<T>): void {
         if(node === this.leftChild) {
             this.leftChild = null;
         } else if(node === this.rightChild) {
@@ -76,7 +76,7 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         }
     }
 
-    substituteNode(node: N, substitute: N): void {
+    substituteNode(node:  TreeNode<T>, substitute:  TreeNode<T>): void {
         if(node === this.rightChild) {
             this.rightChild = substitute;
             this.rightChild.setParent(this);
@@ -86,8 +86,8 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         }
     }
 
-    getChildrenRecursive(): N[] {
-        const allChildren: N[] = [];
+    getChildrenRecursive(): TreeNode<T>[] {
+        const allChildren: TreeNode<T>[] = [];
         if(this.leftChild != null) {
             allChildren.push(...this.leftChild.getChildrenRecursive());
             allChildren.push(this.leftChild);
@@ -111,20 +111,20 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         this.color = this.color === Color.BLACK ? Color.RED : Color.BLACK;
     }
 
-    uncle(): N {
+    uncle(): TreeNode<T> {
         const parent = this.getParent();
-        const grandParent = this.getParent().getParent() as N;
+        const grandParent = this.getParent().getParent() as TreeNode<T>;
         if(parent != null && grandParent != null) {
             if (grandParent.isLeftChild(parent)) {
                 return grandParent.getRightChild();
             } else {
-                return grandParent.getLeftChild() as N;
+                return grandParent.getLeftChild() as TreeNode<T>;
             }
         }
         return null;
     }
 
-    grandParent(): N {
+    grandParent(): TreeNode<T> {
         let grandParent = null;
         if(this.getParent() != null) {
             grandParent = this.getParent().getParent();
@@ -132,7 +132,7 @@ export class TreeNode<N extends TreeNode<any, T>, T>{
         return grandParent;
     }
 
-    sibling(): N {
+    sibling(): TreeNode<T> {
         if(this.getParent() == null) {
             return null;
         } else if(this.getParent().isLeftChild(this)){

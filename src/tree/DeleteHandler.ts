@@ -2,15 +2,15 @@ import {UpdateHandler} from "./UpdateHandler";
 import {Color, TreeNode} from "./Node";
 import {RedBlackTree} from "./RedBlackTree";
 
-export class DeleteHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T, N> {
+export class DeleteHandler<T> extends UpdateHandler<T> {
     private readonly comparator: (o1: T, o2: T) => number;
 
-    constructor(tree: RedBlackTree<T, N>, comparator: (o1: T, o2: T) => number) {
+    constructor(tree: RedBlackTree<T>, comparator: (o1: T, o2: T) => number) {
         super(tree);
         this.comparator = comparator;
     }
 
-    delete(node: N): void {
+    delete(node: TreeNode<T>): void {
         if(!node.hasChildren()) {
             if(this.tree.isRoot(node)) {
                 this.tree.setRoot(null);
@@ -28,7 +28,7 @@ export class DeleteHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
             this.swap(node, substituteWith);
             this.delete(node);
         } else {
-            let substituteWith = null;
+            let substituteWith;
             if(node.getRightChild() == null) {
                 substituteWith = node.getLeftChild();
             } else {
@@ -48,18 +48,18 @@ export class DeleteHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    inOrderPredecessor(node: N): N {
+    inOrderPredecessor(node: TreeNode<T>): TreeNode<T> {
         if(node.getLeftChild() == null) {
             return null;
         } else {
             const allChildren = node.getLeftChild().getChildrenRecursive();
             allChildren.push(node.getLeftChild());
-            allChildren.sort((a: N, b: N) => this.comparator(a.getValue(), b.getValue()));
+            allChildren.sort((a: TreeNode<T>, b: TreeNode<T>) => this.comparator(a.getValue(), b.getValue()));
             return allChildren[allChildren.length - 1];
         }
     }
 
-    recover(sibling: N): void {
+    recover(sibling: TreeNode<T>): void {
         const siblingColor = sibling.getColor();
         const siblingsLeftChild = sibling.getLeftChild();
         const siblingsRightChild = sibling.getRightChild();
@@ -98,7 +98,7 @@ export class DeleteHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
             }
         } else {
             const parent = sibling.getParent();
-            let newSibling = null;
+            let newSibling;
             sibling.setColor(Color.BLACK);
             parent.setColor(Color.RED);
             if(isSiblingLeftChild) {
@@ -112,7 +112,7 @@ export class DeleteHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    swap(node1: N, node2: N): void {
+    swap(node1: TreeNode<T>, node2: TreeNode<T>): void {
         if(node1.getParent() === node2) {
             this.swapChildParent(node2, node1);
         } else if(node2.getParent() === node1) {
@@ -145,7 +145,7 @@ export class DeleteHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    swapChildParent(parent: N, child: N): void {
+    swapChildParent(parent: TreeNode<T>, child: TreeNode<T>): void {
         const parentColor = parent.getColor();
         const childColor = child.getColor();
         const leftGrandChild = child.getLeftChild();

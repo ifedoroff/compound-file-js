@@ -91,7 +91,7 @@ describe('test subview', () => {
     });
 
     it('Var Size Chunked Dataview', () => {
-        const view = new VariableSizeChunkedDataView([new SimpleDataview(new Array(64)), new SimpleDataview(new Array(32))]);
+        let view = new VariableSizeChunkedDataView([new SimpleDataview(new Array(64)), new SimpleDataview(new Array(32))]);
         expect(() => view.subView(96)).to.throw();
         expect(view.subView(32).getSize()).eq(64);
         expect(view.subView(0, 0).getSize()).eq(0);
@@ -100,5 +100,11 @@ describe('test subview', () => {
         expect(view.subView(0, 96).getSize()).eq(96);
         expect(() => view.subView(-1).getSize()).to.throw();
         expect(() => view.subView(1, 0).getSize()).to.throw();
+
+        view = new VariableSizeChunkedDataView([new SimpleDataview(new Array(64))]);
+        expect(view.subView(0).getSize()).eq(64);
+        expect(view.subView(60).getSize()).eq(4);
+        expect(view.subView(5, 10).getSize()).eq(5);
+        expect(() => view.subView(64)).to.throw();
     });
 });

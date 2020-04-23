@@ -24,7 +24,7 @@ export class VariableSizeChunkedDataView implements CFDataview {
         if(position + bytes.length > this.size) throw new Error(`Sub-view should has end index < ${this.size}: end = ${position + bytes.length - 1}`);
         let startingPositionInFirstView: number;
         const beforeFirst = this.viewMap.lowerKey(position);
-        if(beforeFirst == null) {
+        if(beforeFirst === undefined) {
             startingPositionInFirstView = position;
         } else {
             startingPositionInFirstView = position - beforeFirst - 1;
@@ -35,10 +35,10 @@ export class VariableSizeChunkedDataView implements CFDataview {
         const currentView: CFDataview = currentEntry[1];
         let bytesToWrite = Math.min(currentView.subView(startingPositionInFirstView).getSize(), remaining);
         remaining -= bytesToWrite;
-            currentView.writeAt(startingPositionInFirstView, bytes.slice(0, bytesToWrite));
+        currentView.writeAt(startingPositionInFirstView, bytes.slice(0, bytesToWrite));
         while(remaining > 0) {
             currentEntry = this.viewMap.higherEntry(currentKey);
-            if(currentEntry == null) {
+            if(currentEntry === undefined) {
                 throw new Error("Preliminary end of chain");
             } else {
                 bytesToWrite = Math.min(currentView.getSize(), remaining);
@@ -54,7 +54,7 @@ export class VariableSizeChunkedDataView implements CFDataview {
     }
 
     getData(): number[] {
-        const result = new Array(this.getSize());
+        const result = [];
         let index = 0;
         for (const view of Array.from(this.viewMap.values())) {
             result.push(...view.getData());
@@ -65,42 +65,54 @@ export class VariableSizeChunkedDataView implements CFDataview {
 
     subView(start: number, end?: number): CFDataview {
         if(end == null) {
-            end = this.getSize();
-        }
-        if(start < 0) throw new Error("Sub-view should has starting index >= 0: start = " + start);
-        if(end > this.size) throw new Error(`Sub-view should has end index < ${this.getSize()}: end = ${end}`);
-        if(start >= this.getSize()) throw new Error(`Sub-view should not exceed the size of a view: size = ${this.getSize()}`);
-        if(start > end) throw new Error(`Sub-view start should be less or equal to end: start(${start}) / end(${end})`);
-        if(start === end) {
-            return new SimpleDataview(new Array(0));
-        }
-        const last = end - 1;
-        const firstEntry = this.viewMap.ceilingEntry(start);
-        const firstEntryValue = firstEntry[1];
-        const firstEntryKey = firstEntry[0];
-        const lastEntry = this.viewMap.ceilingEntry(last);
-        const lastEntryValue = lastEntry[1];
-        const lastEntryKey = firstEntry[0];
-        let startingPositionInFirstView;
-        const beforeFirst = this.viewMap.lowerKey(start);
-        if(beforeFirst == null) {
-            startingPositionInFirstView = start;
-        } else {
-            startingPositionInFirstView = start - beforeFirst - 1;
-        }
-        if(firstEntry === lastEntry) {
-            if(beforeFirst === null) {
-                return firstEntryValue.subView(startingPositionInFirstView, end);
+            if(start < 0)
+                throw new Error("Sub-view should has starting index >= 0: start = " + start);
+            const [firstKey, firstValue] = this.viewMap.ceilingEntry(start);
+            let previousKey;
+            if(this.viewMap.lowerEntry(start) === undefined) {
+                [previousKey] = [firstKey, firstValue];
             } else {
-                return firstEntryValue.subView(startingPositionInFirstView, end - beforeFirst - 1);
+                [previousKey] = this.viewMap.lowerEntry(start);
             }
-        } else {
-            const beforeLast = this.viewMap.lowerKey(last);
+            const startingPositionInFirstView = previousKey === firstKey ? start : start - previousKey - 1;
             const result: CFDataview[] = [];
-            result.push(firstEntryValue.subView(startingPositionInFirstView));
-            result.push(...Array.from(this.viewMap.splitHigher(firstEntryKey, false).splitLower(lastEntryKey, false).values()));
-            result.push(lastEntryValue.subView(0, end - beforeLast - 1));
+            result.push(firstValue.subView(startingPositionInFirstView));
+            result.push(...Array.from(this.viewMap.splitHigher(firstKey, false).values()));
             return new VariableSizeChunkedDataView(result);
+        } else {
+            if (start < 0) throw new Error("Sub-view should has starting index >= 0: start = " + start);
+            if (end > this.size) throw new Error(`Sub-view should has end index < ${this.getSize()}: end = ${end}`);
+            if (start >= this.getSize()) throw new Error(`Sub-view should not exceed the size of a view: size = ${this.getSize()}`);
+            if (start > end) throw new Error(`Sub-view start should be less or equal to end: start(${start}) / end(${end})`);
+            if (start === end) {
+                return new SimpleDataview(new Array(0));
+            }
+            const last = end - 1;
+            const firstEntry = this.viewMap.ceilingEntry(start);
+            const [firstEntryKey, firstEntryValue]  = firstEntry;
+            const lastEntry = this.viewMap.ceilingEntry(last);
+            const [lastEntryKey, lastEntryValue] = lastEntry;
+            let startingPositionInFirstView;
+            const beforeFirst = this.viewMap.lowerKey(start);
+            if (beforeFirst === undefined) {
+                startingPositionInFirstView = start;
+            } else {
+                startingPositionInFirstView = start - beforeFirst - 1;
+            }
+            if (firstEntryKey === lastEntryKey) {
+                if (beforeFirst === undefined) {
+                    return firstEntryValue.subView(startingPositionInFirstView, end);
+                } else {
+                    return firstEntryValue.subView(startingPositionInFirstView, end - beforeFirst - 1);
+                }
+            } else {
+                const beforeLast = this.viewMap.lowerKey(last);
+                const result: CFDataview[] = [];
+                result.push(firstEntryValue.subView(startingPositionInFirstView));
+                result.push(...Array.from(this.viewMap.splitHigher(firstEntryKey, false).splitLower(lastEntryKey, false).values()));
+                result.push(lastEntryValue.subView(0, end - beforeLast - 1));
+                return new VariableSizeChunkedDataView(result);
+            }
         }
     }
     allocate(length: number): CFDataview {

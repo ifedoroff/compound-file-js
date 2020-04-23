@@ -2,32 +2,32 @@ import {Color, TreeNode} from "./Node";
 import {InsertHandler} from "./InsertHandler";
 import {DeleteHandler} from "./DeleteHandler";
 
-export interface NodeFactory<N extends TreeNode<any, T>, T> {
-    create(value: T, color: Color): N;
+export interface NodeFactory<T> {
+    create(value: T, color: Color): TreeNode<T>;
 }
 
-export class RedBlackTree<T, N extends TreeNode<N, T>> {
+export class RedBlackTree<T> {
 
-    private readonly insertHandler: InsertHandler<T, N>;
-    private readonly deleteHandler: DeleteHandler<T, N>;
-    private root: N = null;
+    private readonly insertHandler: InsertHandler<T>;
+    private readonly deleteHandler: DeleteHandler<T>;
+    private root: TreeNode<T> = null;
     private readonly comparator: (o1: T, o2: T) => number;
 
-    constructor(nodeFactory: NodeFactory<N, T>, comparator: (o1: T, o2: T) => number ) {
-        this.insertHandler = new InsertHandler<T, N>(this, nodeFactory, comparator);
-        this.deleteHandler = new DeleteHandler<T, N>(this, comparator);
+    constructor(nodeFactory: NodeFactory<T>, comparator: (o1: T, o2: T) => number ) {
+        this.insertHandler = new InsertHandler<T>(this, nodeFactory, comparator);
+        this.deleteHandler = new DeleteHandler<T>(this, comparator);
         this.comparator = comparator;
     }
 
-    delete(node: N): void {
+    delete(node: TreeNode<T>): void {
         this.deleteHandler.delete(node);
     }
 
-    insert(value: T): N {
+    insert(value: T): TreeNode<T> {
         return this.insertHandler.insert(value);
     }
 
-    findNode(value: T): N {
+    findNode(value: T): TreeNode<T> {
         if(this.root == null) {
             return null;
         } else {
@@ -47,7 +47,7 @@ export class RedBlackTree<T, N extends TreeNode<N, T>> {
         }
     }
 
-    getRoot(): N {
+    getRoot(): TreeNode<T> {
         return this.root;
     }
 
@@ -55,12 +55,12 @@ export class RedBlackTree<T, N extends TreeNode<N, T>> {
         return this.root != null;
     }
 
-    isRoot(node: N): boolean {
+    isRoot(node: TreeNode<T>): boolean {
         return this.root === node;
     }
 
 
-    setRoot(node: N): void {
+    setRoot(node: TreeNode<T>): void {
         this.root = node;
         if(this.root != null) {
             this.root.setParent(null);

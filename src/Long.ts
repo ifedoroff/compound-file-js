@@ -4,6 +4,8 @@ declare module "long" {
     interface Long {
         to4BytesLE(): number[];
         to4BytesBE(): number[];
+        to2BytesLE(): number[];
+        to2BytesBE(): number[];
     }
 }
 
@@ -12,6 +14,13 @@ Long.prototype.to4BytesLE = function(): number[] {
 };
 Long.prototype.to4BytesBE = function(): number[] {
     return this.toBytesBE().slice(0, 4);
+};
+
+Long.prototype.to2BytesLE = function(): number[] {
+    return this.toBytesLE().slice(0, 2);
+};
+Long.prototype.to2BytesBE = function(): number[] {
+    return this.toBytesBE().slice(0, 2);
 };
 
 const fromBytesLEOriginal = Long.fromBytesLE;

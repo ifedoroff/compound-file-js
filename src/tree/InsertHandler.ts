@@ -2,17 +2,17 @@ import {Color, TreeNode} from "./Node";
 import {NodeFactory, RedBlackTree} from "./RedBlackTree";
 import {UpdateHandler} from "./UpdateHandler";
 
-export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T, N> {
-    private readonly nodeFactory: NodeFactory<N, T>;
+export class InsertHandler<T> extends UpdateHandler<T> {
+    private readonly nodeFactory: NodeFactory<T>;
     private readonly comparator: (o1: T, o2: T) => number;
 
-    constructor(tree: RedBlackTree<T, N>, nodeFactory: NodeFactory<N, T>, comparator: (o1: T, o2: T) => number) {
+    constructor(tree: RedBlackTree<T>, nodeFactory: NodeFactory<T>, comparator: (o1: T, o2: T) => number) {
         super(tree);
         this.nodeFactory = nodeFactory;
         this.comparator = comparator;
     }
 
-    insert(value: T): N {
+    insert(value: T): TreeNode<T> {
         const node = this.simpleInsert(value);
         if(!this.tree.isRoot(node) && !this.tree.isRoot(node.getParent())) {
             this.recolorAndRotateIfNeeded(node);
@@ -20,7 +20,7 @@ export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         return node;
     }
 
-    simpleInsert(value: T): N {
+    simpleInsert(value: T): TreeNode<T> {
         if(!this.tree.hasRoot()) {
             const node = this.nodeFactory.create(value, Color.BLACK);
             this.tree.setRoot(node);
@@ -54,7 +54,7 @@ export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    recolorAndRotateIfNeeded(node: N): void {
+    recolorAndRotateIfNeeded(node: TreeNode<T> ): void {
         let grandChild = node;
         let parent = null;
         while(grandChild != null &&
@@ -78,7 +78,7 @@ export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    rotateSubtree(grandParent: N, parent: N, grandChild: N): void {
+    rotateSubtree(grandParent: TreeNode<T>, parent: TreeNode<T>, grandChild: TreeNode<T> ): void {
         if(grandParent.isLeftChild(parent) && parent.isLeftChild(grandChild)) {
             this.rightRotate(grandParent, parent);
         } else if(grandParent.isLeftChild(parent) && parent.isRightChild(grandChild)) {
@@ -96,7 +96,7 @@ export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    recolorAfterRotate(pivot: N): void {
+    recolorAfterRotate(pivot: TreeNode<T> ): void {
         pivot.setColor(Color.BLACK);
         const leftChild = pivot.getLeftChild();
         if(leftChild != null) {
@@ -108,7 +108,7 @@ export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    recolorIfRedScenario(grandChild: N): void {
+    recolorIfRedScenario(grandChild: TreeNode<T> ): void {
         const uncle = grandChild.uncle();
         if(uncle != null) {
             uncle.setColor(Color.BLACK);
@@ -127,7 +127,7 @@ export class InsertHandler<T, N extends TreeNode<N, T>> extends UpdateHandler<T,
         }
     }
 
-    rotateAndRecolorIfBlackScenario(grandChild: N): void {
+    rotateAndRecolorIfBlackScenario(grandChild: TreeNode<T> ): void {
         const parent = grandChild.getParent();
         const grandParent = grandChild.grandParent();
         this.rotateSubtree(grandParent, parent, grandChild);

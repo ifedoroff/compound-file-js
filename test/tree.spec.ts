@@ -4,21 +4,21 @@ import {Color, TreeNode} from "../src/tree/Node";
 import {TreeBuilder} from "../src/tree/TreeBuilder";
 import "../src/Long"
 
-const nodeFactory: NodeFactory<TreeNode<TreeNode<any, number>, number>, number> = {
-    create: (value: number, color: Color) => new TreeNode<TreeNode<any, number>, number>(value, color)
+const nodeFactory: NodeFactory<number> = {
+    create: (value: number, color: Color) => new TreeNode<number>(value, color)
 };
 
 const comparator = (o1: number, o2: number) => o1 - o2;
 
 describe('insert nodes in red black tree', () => {
     it('insert root', () => {
-        const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
+        const tree = new RedBlackTree<number>(nodeFactory, comparator);
         tree.insert(1);
         expect(tree.getRoot().getColor()).eq(Color.BLACK);
     });
 
     it('insert mostly left', () => {
-        const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
+        const tree = new RedBlackTree<number>(nodeFactory, comparator);
         tree.insert(10);
         expect(tree.getRoot().getColor()).eq(Color.BLACK);
 
@@ -120,7 +120,7 @@ describe('insert nodes in red black tree', () => {
     });
 
     it('insert mostly right', () => {
-        const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
+        const tree = new RedBlackTree<number>(nodeFactory, comparator);
         tree.insert(1);
         tree.insert(2);
         tree.insert(3);
@@ -153,14 +153,14 @@ describe('insert nodes in red black tree', () => {
     });
 
     it('insert chaotic', () => {
-        const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
+        const tree = new RedBlackTree<number>(nodeFactory, comparator);
         tree.insert(1);
         expect(
             TreeBuilder.empty(nodeFactory, comparator).setRootNode(1).build()
         ).to.deep.eq(tree);
         tree.insert(10);
         tree.insert(2);
-        expect(tree).to.deep.eq(TreeBuilder.empty<number, TreeNode<any, number>>(nodeFactory, comparator).setRootNode(2, (treeLevel) => {
+        expect(tree).to.deep.eq(TreeBuilder.empty(nodeFactory, comparator).setRootNode(2, (treeLevel) => {
             treeLevel.left(1, Color.RED);
             treeLevel.right(10, Color.RED);
         }).build());
@@ -200,7 +200,7 @@ describe('insert nodes in red black tree', () => {
 
 describe('delete nodes of red black tree', () => {
     it('simple delete', () => {
-        const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
+        const tree = new RedBlackTree<number>(nodeFactory, comparator);
         for (let i = 1; i < 9; i++) {
             tree.insert(i);
         }
@@ -236,7 +236,7 @@ describe('delete nodes of red black tree', () => {
     });
 
     it('chaotic delete', () => {
-        const tree = new RedBlackTree<number, TreeNode<any, number>>(nodeFactory, comparator);
+        const tree = new RedBlackTree<number>(nodeFactory, comparator);
         tree.insert(1);
         tree.insert(10);
         tree.insert(2);

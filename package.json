@@ -8,7 +8,7 @@
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "build:js": "babel src --out-file dist/compound-file.js --extensions \".ts\" --source-maps inline",
     "build:tsc": "tsc",
-    "build": "npm-run-all clean lint build:tsc build:js"
+    "build": "npm-run-all clean test lint build:tsc build:js"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +35,7 @@
   "dependencies": {
     "@types/long": "^4.0.1",
     "long": "^4.0.0",
-    "ts-treemap": "^1.0.0"
+    "ts-treemap": "^1.0.0",
+    "utf16-char-codes": "^1.0.0"
   }
 }

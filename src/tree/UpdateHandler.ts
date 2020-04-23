@@ -1,15 +1,15 @@
 import {TreeNode} from "./Node";
 import {RedBlackTree} from "./RedBlackTree";
 
-export class UpdateHandler<T, N extends TreeNode<N, T>> {
+export class UpdateHandler<T> {
 
-     protected readonly tree: RedBlackTree<T, N>;
+     protected readonly tree: RedBlackTree<T>;
 
-    constructor(tree: RedBlackTree<T, N>) {
+    constructor(tree: RedBlackTree<T>) {
         this.tree = tree;
     }
 
-    rightRotate(subTreeRoot: N, pivot: N): void {
+    rightRotate(subTreeRoot: TreeNode<T>, pivot: TreeNode<T>): void {
         const parent = subTreeRoot.getParent();
         if(parent == null) {
             subTreeRoot.setLeftChild(pivot.getRightChild());
@@ -28,7 +28,7 @@ export class UpdateHandler<T, N extends TreeNode<N, T>> {
         this.swapColor(subTreeRoot, pivot);
     }
 
-    leftRotate(subTreeRoot: N, pivot: N): void {
+    leftRotate(subTreeRoot: TreeNode<T>, pivot: TreeNode<T>): void {
         const parent = subTreeRoot.getParent();
         if(parent == null) {
             subTreeRoot.setRightChild(pivot.getLeftChild());
@@ -47,7 +47,7 @@ export class UpdateHandler<T, N extends TreeNode<N, T>> {
         this.swapColor(subTreeRoot, pivot);
     }
 
-    swapColor(node1: N, node2: N): void {
+    swapColor(node1: TreeNode<T>, node2: TreeNode<T>): void {
         const node1Color = node1.getColor();
         node1.setColor(node2.getColor());
         node2.setColor(node1Color);

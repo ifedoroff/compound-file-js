@@ -2,22 +2,22 @@ import {Color, TreeNode} from "./Node";
 import {NodeFactory, RedBlackTree} from "./RedBlackTree";
 import {TreeLevel} from "./TreeLevel";
 
-export class TreeBuilder<T, N extends TreeNode<N, T>> {
+export class TreeBuilder<T> {
 
-    private readonly nodeFactory: NodeFactory<N, T>;
-    private readonly tree: RedBlackTree<T, N>;
+    private readonly nodeFactory: NodeFactory<T>;
+    private readonly tree: RedBlackTree<T>;
 
-    constructor(nodeFactory: NodeFactory<N, T>, comparator: (o1: T, o2: T) => number) {
-        this.tree = new RedBlackTree<T, N>(nodeFactory, comparator);
+    constructor(nodeFactory: NodeFactory<T>, comparator: (o1: T, o2: T) => number) {
+        this.tree = new RedBlackTree<T>(nodeFactory, comparator);
         this.nodeFactory = nodeFactory;
     }
 
-    static empty<T, N extends TreeNode<N, T>>(nodeFactory: NodeFactory<N, T>, comparator: (o1: T, o2: T) => number): TreeBuilder<T, N> {
+    static empty<T>(nodeFactory: NodeFactory<T>, comparator: (o1: T, o2: T) => number): TreeBuilder<T> {
         return new TreeBuilder(nodeFactory, comparator);
     }
 
-    setRootNode(value: T, levelBuilder?: (level: TreeLevel<T, any>) => void): TreeBuilder<T, N> {
-        const node = new TreeNode<N, T>(value, Color.BLACK) as N;
+    setRootNode(value: T, levelBuilder?: (level: TreeLevel<T>) => void): TreeBuilder<T> {
+        const node = new TreeNode<T>(value, Color.BLACK);
         this.tree.setRoot(node);
         if(levelBuilder != null) {
             levelBuilder(new TreeLevel(node, this.nodeFactory));
@@ -25,10 +25,7 @@ export class TreeBuilder<T, N extends TreeNode<N, T>> {
         return this;
     }
 
-    build(): RedBlackTree<T, N> {
+    build(): RedBlackTree<T> {
         return this.tree;
     }
 }
-
-
-
