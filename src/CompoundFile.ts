@@ -29,6 +29,10 @@ export class CompoundFile {
     private readonly directoryEntryChain: DirectoryEntryChain;
     private dataView: CFDataview;
 
+    public static fromBytes(bytes: number[]): CompoundFile {
+        return new CompoundFile(new FixedSizeChunkedDataview(512, bytes));
+    }
+
     constructor(dataView?: CFDataview) {
         const emptyFile = dataView == null;
         if(emptyFile) {

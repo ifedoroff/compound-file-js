@@ -3,10 +3,12 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "target": "es5",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "declaration": true
   },
+  "include": ["src/**/*"],
   "lib": ["es6"]
 }
