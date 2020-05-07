@@ -54,7 +54,7 @@ export class MiniStreamRW implements StreamRW {
     }
 
     getMiniSectorData(position: number): CFDataview {
-        const sectorPosition = position * Math.floor(this.header.getMiniSectorShift() / this.header.getSectorShift());
+        const sectorPosition = Math.floor(position * this.header.getMiniSectorShift() / this.header.getSectorShift());
         const shiftInsideSector = position * this.header.getMiniSectorShift() % this.header.getSectorShift();
         return this.sectors.sector(this.miniStreamSectorChain[sectorPosition]).subView(shiftInsideSector, shiftInsideSector + this.header.getMiniSectorShift());
     }
