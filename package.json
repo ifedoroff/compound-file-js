@@ -1,6 +1,6 @@
 {
   "name": "compound-binary-file-js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/index.ts",
   "types": "dist/index.d.ts",
   "description": "",
