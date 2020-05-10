@@ -107,12 +107,20 @@ export class DirectoryEntry{
         }
     }
 
+    static setRightSibling(view: CFDataview, position: number) {
+        view.subView(DirectoryEntry.FLAG_POSITION.RIGHT_SIBLING, DirectoryEntry.FLAG_POSITION.RIGHT_SIBLING + 4).writeAt(0, Long.fromValue(position).to4BytesLE());
+    }
+
     setLeftSibling(leftSibling: DirectoryEntry): void {
         if(leftSibling == null) {
             this.view.subView(DirectoryEntry.FLAG_POSITION.LEFT_SIBLING, DirectoryEntry.FLAG_POSITION.LEFT_SIBLING + 4).writeAt(0, FREESECT_MARK_OR_NOSTREAM);
         } else {
             this.view.subView(DirectoryEntry.FLAG_POSITION.LEFT_SIBLING, DirectoryEntry.FLAG_POSITION.LEFT_SIBLING + 4).writeAt(0, Long.fromValue(leftSibling.getId()).to4BytesLE());
         }
+    }
+
+    static setLeftSibling(view: CFDataview, position: number) {
+        view.subView(DirectoryEntry.FLAG_POSITION.LEFT_SIBLING, DirectoryEntry.FLAG_POSITION.LEFT_SIBLING + 4).writeAt(0, Long.fromValue(position).to4BytesLE());
     }
 
     setDirectoryEntryName(name: string): void {
@@ -159,7 +167,11 @@ export class DirectoryEntry{
     }
 
     protected getChildPosition(): number {
-        return Long.fromBytesLE(this.view.subView(DirectoryEntry.FLAG_POSITION.CHILD, DirectoryEntry.FLAG_POSITION.CHILD + 4).getData()).toNumber();
+        return DirectoryEntry.getChildPosition(this.view);
+    }
+
+    static getChildPosition(view: CFDataview): number {
+        return Long.fromBytesLE(view.subView(DirectoryEntry.FLAG_POSITION.CHILD, DirectoryEntry.FLAG_POSITION.CHILD + 4).getData()).toNumber();
     }
 
     private setObjectType(objectType: ObjectType): void {
@@ -174,7 +186,11 @@ export class DirectoryEntry{
         return isFreeSectOrNoStream(leftSiblingPosition) || isEndOfChain(leftSiblingPosition) ? null : this.directoryEntryChain.getEntryById(leftSiblingPosition);
     }
     getLeftSiblingPosition(): number {
-        return Long.fromBytesLE(this.view.subView(DirectoryEntry.FLAG_POSITION.LEFT_SIBLING, DirectoryEntry.FLAG_POSITION.LEFT_SIBLING + 4).getData()).toNumber();
+        return DirectoryEntry.getLeftSiblingPosition(this.view);
+    }
+
+    static getLeftSiblingPosition(view: CFDataview): number {
+        return Long.fromBytesLE(view.subView(DirectoryEntry.FLAG_POSITION.LEFT_SIBLING, DirectoryEntry.FLAG_POSITION.LEFT_SIBLING + 4).getData()).toNumber();
     }
 
     getRightSibling(): DirectoryEntry {
@@ -183,7 +199,11 @@ export class DirectoryEntry{
     }
 
     getRightSiblingPosition(): number {
-        return Long.fromBytesLE(this.view.subView(DirectoryEntry.FLAG_POSITION.RIGHT_SIBLING, DirectoryEntry.FLAG_POSITION.RIGHT_SIBLING + 4).getData()).toNumber();
+        return DirectoryEntry.getRightSiblingPosition(this.view);
+    }
+
+    static getRightSiblingPosition(view: CFDataview): number {
+        return Long.fromBytesLE(view.subView(DirectoryEntry.FLAG_POSITION.RIGHT_SIBLING, DirectoryEntry.FLAG_POSITION.RIGHT_SIBLING + 4).getData()).toNumber();
     }
 
     getStreamStartingSector(): number {

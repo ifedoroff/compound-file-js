@@ -10,8 +10,8 @@ export class RootStorageDirectoryEntry extends StorageDirectoryEntry {
     static readonly NAME = "Root Entry";
     public static readonly ID = 0;
 
-    constructor(id: number, directoryEntryChain: DirectoryEntryChain, view: CFDataview) {
-        super(id, directoryEntryChain, view, RootStorageDirectoryEntry.NAME, ColorFlag.BLACK, ObjectType.RootStorage);
+    constructor(id: number, directoryEntryChain: DirectoryEntryChain, view: CFDataview, name?: string, colorFlag?: ColorFlag , objectType: ObjectType = ObjectType.Storage) {
+        super(id, directoryEntryChain, view, name, colorFlag, objectType);
         const child = this.getChild();
         if(child != null) {
             this.tree.setRoot(new DirectoryEntryNode(child, Color.BLACK));

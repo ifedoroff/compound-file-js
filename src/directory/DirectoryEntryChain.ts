@@ -2,7 +2,7 @@ import {Sectors} from "../Sectors";
 import {Header} from "../Header";
 import {StreamHolder} from "../stream/StreamHolder";
 import {FAT} from "../alloc/FAT";
-import {equal} from "../utils";
+import {equal, isFreeSectOrNoStream} from "../utils";
 import {ObjectType, DirectoryEntry, ColorFlag} from "./DirectoryEntry";
 import {StreamDirectoryEntry} from "./StreamDirectoryEntry";
 import {StorageDirectoryEntry} from "./StorageDirectoryEntry";
@@ -11,7 +11,7 @@ import {CFDataview} from "../dataview/СFDataview";
 
 export class DirectoryEntryChain {
 
-    public static readonly UTF16_TERMINATING_BYTES = [255, 255];
+    public static readonly UTF16_TERMINATING_BYTES = [0, 0];
 
     private readonly sectors: Sectors;
     private readonly fat: FAT;
@@ -31,16 +31,26 @@ export class DirectoryEntryChain {
 
     private readDirectoryEntryCount(): void {
         if(this.sectorChain.length !== 0) {
-            this.directoryEntryCount = (this.sectorChain.length - 1) * 4;
-            const lastDirectoryEntrySector = this.sectors.sector(this.sectorChain[this.sectorChain.length - 1]);
-            let directoriesInSector;
-            for (directoriesInSector = 4; directoriesInSector > 0; directoriesInSector--) {
-                const sectorStart = (directoriesInSector - 1) * 128;
-                if(equal(DirectoryEntryChain.UTF16_TERMINATING_BYTES, lastDirectoryEntrySector.subView(sectorStart, sectorStart + 2).getData())) {
-                    break;
+            let maxDirectoryEntryPosition = -1;
+            for (const sectorPosition of this.sectorChain) {
+                const sector = this.sectors.sector(sectorPosition);
+                for (let i = 0; i < 4; i++) {
+                    const directoryEntryView = sector.subView(i * 128, (i + 1) * 128);
+                    const leftSiblingPosition = DirectoryEntry.getLeftSiblingPosition(directoryEntryView);
+                    const rightSiblingPosition = DirectoryEntry.getRightSiblingPosition(directoryEntryView);
+                    const childPosition = DirectoryEntry.getChildPosition(directoryEntryView);
+                    if(!isFreeSectOrNoStream(leftSiblingPosition)) {
+                        maxDirectoryEntryPosition = Math.max(maxDirectoryEntryPosition, leftSiblingPosition);
+                    }
+                    if(!isFreeSectOrNoStream(rightSiblingPosition)) {
+                        maxDirectoryEntryPosition = Math.max(maxDirectoryEntryPosition, rightSiblingPosition);
+                    }
+                    if(!isFreeSectOrNoStream(childPosition)) {
+                        maxDirectoryEntryPosition = Math.max(maxDirectoryEntryPosition, childPosition);
+                    }
                 }
             }
-            this.directoryEntryCount += directoriesInSector;
+            this.directoryEntryCount = maxDirectoryEntryPosition + 1;
         }
     }
 
@@ -70,7 +80,7 @@ export class DirectoryEntryChain {
             throw new Error("Root Storage should be the first Directory Entry");
         }
         const view = this.getViewForDirectoryEntry();
-        return new RootStorageDirectoryEntry(0, this, view);
+        return new RootStorageDirectoryEntry(0, this, view, RootStorageDirectoryEntry.NAME, ColorFlag.BLACK, ObjectType.RootStorage);
     }
 
     createStorage(name: string, colorFlag: ColorFlag): StorageDirectoryEntry {
