@@ -11,7 +11,7 @@ import {CFDataview} from "../dataview/СFDataview";
 
 export class DirectoryEntryChain {
 
-    public static readonly UTF16_TERMINATING_BYTES = [0, 0];
+    public static readonly UTF16_TERMINATING_BYTES = [255, 255];
 
     private readonly sectors: Sectors;
     private readonly fat: FAT;
