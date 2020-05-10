@@ -1,7 +1,7 @@
 import {CFDataview} from "./СFDataview";
 import {ReferencingSubview} from "./ReferencingSubview";
 import {SimpleDataview} from "./SimpleDataview";
-import {initializedWith} from "../utils";
+import {initializedWidth} from "../utils";
 
 /**
  * @internal
@@ -57,7 +57,7 @@ export class FixedSizeChunkedDataview implements CFDataview {
 
     allocate(length: number): CFDataview {
         if (length !== this.chunkSize) throw new Error();
-        const view = new SimpleDataview(initializedWith(length, 0));
+        const view = new SimpleDataview(initializedWidth(length, 0));
         this.chunks.push(view);
         return view;
     }

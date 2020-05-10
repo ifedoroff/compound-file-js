@@ -6,7 +6,7 @@ import {
     addTrailingZeros,
     ENDOFCHAIN_MARK_INT,
     FREESECT_MARK_OR_NOSTREAM,
-    initializedWith, isEndOfChain, isFreeSectOrNoStream, toUTF16Bytes,
+    initializedWidth, isEndOfChain, isFreeSectOrNoStream, toUTF16Bytes,
     toUTF16WithNoTrailingZeros
 } from "../utils";
 import {Color} from "../tree/Node";
@@ -67,10 +67,10 @@ export class DirectoryEntry{
                 throw new Error();
             this.objectType = view.subView(DirectoryEntry.FLAG_POSITION.OBJECT_TYPE, DirectoryEntry.FLAG_POSITION.OBJECT_TYPE + 1).getData()[0] as ObjectType;
             this.colorFlag = view.subView(DirectoryEntry.FLAG_POSITION.COLOR_FLAG, DirectoryEntry.FLAG_POSITION.COLOR_FLAG + 1).getData()[0] as ColorFlag;
-            this.setStateBits(initializedWith(4, 0));
-            this.setCLSID(initializedWith(16, 0));
-            this.setModifiedTime(initializedWith(8, 0));
-            this.setCreationTime(initializedWith(8, 0));
+            this.setStateBits(initializedWidth(4, 0));
+            this.setCLSID(initializedWidth(16, 0));
+            this.setModifiedTime(initializedWidth(8, 0));
+            this.setCreationTime(initializedWidth(8, 0));
         } else {
             this.setObjectType(objectType);
             this.setColorFlag(colorFlag);

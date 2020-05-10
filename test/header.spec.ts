@@ -1,11 +1,11 @@
 import {Header} from "../src/Header";
-import {ENDOFCHAIN_MARK, initializedWith} from "../src/utils";
+import {ENDOFCHAIN_MARK, initializedWidth} from "../src/utils";
 import { expect } from "chai";
 import {SimpleDataview} from "../src/dataview/SimpleDataview";
 import Long from "long";
 import "../src/Long";
 
-const DUMMY_HEADER = initializedWith(Header.HEADER_LENGTH, 0);
+const DUMMY_HEADER = initializedWidth(Header.HEADER_LENGTH, 0);
 DUMMY_HEADER.splice(Header.FLAG_POSITION.SIGNATURE,  8, ...Header.HEADER_SIGNATURE);
 DUMMY_HEADER.splice(Header.FLAG_POSITION.MINOR_VERSION,  2, ...Header.MINOR_VERSION_3);
 DUMMY_HEADER.splice(Header.FLAG_POSITION.MAJOR_VERSION,  2, ...Header.MAJOR_VERSION_3);
@@ -14,7 +14,7 @@ DUMMY_HEADER.splice(Header.FLAG_POSITION.SECTOR_SHIFT, 2, ...Header.SECTOR_SHIFT
 DUMMY_HEADER.splice(Header.FLAG_POSITION.MINI_SECTOR_SHIFT, 2, ...Header.MINI_SECTOR_SHIFT_VERSION_3);
 DUMMY_HEADER.splice(Header.FLAG_POSITION.MINI_STREAM_CUTOFF_SIZE_POSITION, 4, ...Header.MINI_STREAM_CUTOFF_SIZE);
 DUMMY_HEADER.splice(Header.FLAG_POSITION.FIRST_DIFAT_SECTOR, 4, ...ENDOFCHAIN_MARK);
-DUMMY_HEADER.splice(Header.FLAG_POSITION.DIFAT_ENTRIES_FIRST_POSITION, 436, ...initializedWith(436, 0xff));
+DUMMY_HEADER.splice(Header.FLAG_POSITION.DIFAT_ENTRIES_FIRST_POSITION, 436, ...initializedWidth(436, 0xff));
 
 export function dummyHeader(): number[] {
     const result = [];
@@ -140,14 +140,14 @@ describe('header test', () => {
     });
 
     it('creation of a new Header for empty CFB file', () => {
-        const dataView = new SimpleDataview(initializedWith(512, 0));
+        const dataView = new SimpleDataview(initializedWidth(512, 0));
         // should not throw and error
         // A side-effect function
         Header.empty(dataView);
         // dataView should contain proper information to be read by Header at this point
         const header = new Header(dataView);
         expect(dataView.subView(Header.FLAG_POSITION.SIGNATURE, Header.FLAG_POSITION.SIGNATURE + 8).getData()).to.deep.eq(Header.HEADER_SIGNATURE);
-        expect(dataView.subView(Header.FLAG_POSITION.CLSID, Header.FLAG_POSITION.CLSID + 16).getData()).to.deep.eq(initializedWith(16, 0));
+        expect(dataView.subView(Header.FLAG_POSITION.CLSID, Header.FLAG_POSITION.CLSID + 16).getData()).to.deep.eq(initializedWidth(16, 0));
         expect(dataView.subView(Header.FLAG_POSITION.FIRST_DIFAT_SECTOR, Header.FLAG_POSITION.FIRST_DIFAT_SECTOR + 4).getData()).to.deep.eq(ENDOFCHAIN_MARK);
         expect(dataView.subView(Header.FLAG_POSITION.NUMBER_OF_FAT_SECTORS, Header.FLAG_POSITION.NUMBER_OF_FAT_SECTORS + 4).getData()).to.deep.eq([0,0,0,0]);
         expect(dataView.subView(Header.FLAG_POSITION.FIRST_MINIFAT_SECTOR, Header.FLAG_POSITION.FIRST_MINIFAT_SECTOR + 4).getData()).to.deep.eq(ENDOFCHAIN_MARK);

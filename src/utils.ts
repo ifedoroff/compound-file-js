@@ -51,7 +51,7 @@ export const DIFF_BETWEEN_EPOCHS_1970_1601 = 11644473599996;
     }
 
 
-    export function initializedWith(size: number, value: number|number[]): number[]{
+    export function initializedWidth(size: number, value: number|number[]): number[]{
         const data: number[] = new Array(size);
         if(value instanceof Array) {
             for (let i = 0; i < size; i+=value.length) {

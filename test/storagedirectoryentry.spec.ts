@@ -1,4 +1,4 @@
-import {FREESECT_MARK_OR_NOSTREAM, initializedWith} from "../src/utils";
+import {FREESECT_MARK_OR_NOSTREAM, initializedWidth} from "../src/utils";
 import {ColorFlag, DirectoryEntry, ObjectType} from "../src/directory/DirectoryEntry";
 import {StreamDirectoryEntry} from "../src/directory/StreamDirectoryEntry";
 import {mock} from "ts-mockito";
@@ -13,7 +13,7 @@ describe('Storage Directory Entry test', () => {
     let directoryEntryChainMock: DirectoryEntryChain;
     let streamHolderMock: StreamHolder;
     beforeEach(() => {
-        data = initializedWith(512, 0);
+        data = initializedWidth(512, 0);
         data[DirectoryEntry.FLAG_POSITION.OBJECT_TYPE] = ObjectType.Storage;
         data[DirectoryEntry.FLAG_POSITION.COLOR_FLAG] = ColorFlag.BLACK;
         data.splice(DirectoryEntry.FLAG_POSITION.LEFT_SIBLING, 4, ...FREESECT_MARK_OR_NOSTREAM);

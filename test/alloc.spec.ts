@@ -6,7 +6,7 @@ import {
     ENDOFCHAIN_MARK_INT,
     FATSECT_MARK,
     FREESECT_MARK_OR_NOSTREAM,
-    initializedWith
+    initializedWidth
 } from "../src/utils";
 import * as Long from "long";
 import "../src/Long";
@@ -223,7 +223,7 @@ describe('DIFAT test', () => {
     it('register 2 FAT sectors in the first DIFAT sector', () => {
         when(headerMock.getFirstDifatSectorLocation()).thenReturn(Long.fromBytesLE(ENDOFCHAIN_MARK).toNumber());
         when(headerMock.canFitMoreDifatEntries()).thenReturn(false);
-        const sector = new DIFATSector(SimpleSector.from(new SimpleDataview(initializedWith(512, 0)), 1, FREESECT_MARK_OR_NOSTREAM));
+        const sector = new DIFATSector(SimpleSector.from(new SimpleDataview(initializedWidth(512, 0)), 1, FREESECT_MARK_OR_NOSTREAM));
         when(sectorsMock.allocateDIFAT()).thenReturn(sector);
 
         const difat = new DIFAT(instance(sectorsMock), instance(headerMock), instance(faTtoDIFATFacadeMock));

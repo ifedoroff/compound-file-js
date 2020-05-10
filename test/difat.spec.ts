@@ -1,6 +1,6 @@
 import {Header} from "../src/Header";
 import {SimpleDataview} from "../src/dataview/SimpleDataview";
-import {initializedWith} from "../src/utils";
+import {initializedWidth} from "../src/utils";
 import {Sectors} from "../src/Sectors";
 import { expect } from "chai";
 import * as Long from "long";
@@ -14,7 +14,7 @@ import {
 import {FixedSizeChunkedDataview} from "../src/dataview/FixedSizeChunkedDataview";
 
 function difatSector() {
-    const header: Header = Header.empty(new SimpleDataview(initializedWith(512, 0)));
+    const header: Header = Header.empty(new SimpleDataview(initializedWidth(512, 0)));
     return new Sectors(new FixedSizeChunkedDataview(Header.SECTOR_SHIFT_VERSION_3_INT), header).allocateDIFAT();
 }
 
@@ -28,7 +28,7 @@ describe('DIFAT test', () => {
     });
 
     it('retrieve registered FAT sector', () => {
-        const data = initializedWith(Header.SECTOR_SHIFT_VERSION_3_INT, 0);
+        const data = initializedWidth(Header.SECTOR_SHIFT_VERSION_3_INT, 0);
         for (let i = 0; i < 128; i++) {
             data.splice(i * 4, 4, ...Long.fromValue(i).to4BytesLE());
         }

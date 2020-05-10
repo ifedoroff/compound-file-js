@@ -1,7 +1,7 @@
 import {CFDataview} from "./dataview/СFDataview";
 import * as Long from 'long';
 import { DifatEntries } from "./DifatEntries";
-import {ENDOFCHAIN_MARK, FREESECT_MARK_OR_NOSTREAM, equal, initializedWith} from "./utils";
+import {ENDOFCHAIN_MARK, FREESECT_MARK_OR_NOSTREAM, equal, initializedWidth} from "./utils";
 
 export class Header {
 
@@ -71,9 +71,9 @@ export class Header {
             throw new Error();
         if(!equal(Header.MINI_SECTOR_SHIFT_VERSION_3, dataView.subView(Header.FLAG_POSITION.MINI_SECTOR_SHIFT, Header.FLAG_POSITION.MINI_SECTOR_SHIFT + 2).getData()))
             throw new Error();
-        if(!equal(initializedWith(6, 0), dataView.subView(34, 40).getData()))
+        if(!equal(initializedWidth(6, 0), dataView.subView(34, 40).getData()))
             throw new Error();
-        if(!equal(initializedWith(4, 0), dataView.subView(40, 44).getData()))
+        if(!equal(initializedWidth(4, 0), dataView.subView(40, 44).getData()))
             throw new Error();
         if(!equal(Header.MINI_STREAM_CUTOFF_SIZE, dataView.subView(Header.FLAG_POSITION.MINI_STREAM_CUTOFF_SIZE_POSITION, Header.FLAG_POSITION.MINI_STREAM_CUTOFF_SIZE_POSITION + 4).getData()))
             throw new Error();

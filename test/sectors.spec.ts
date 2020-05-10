@@ -1,6 +1,6 @@
 import {Header} from "../src/Header";
 import {SimpleDataview} from "../src/dataview/SimpleDataview";
-import {ENDOFCHAIN_MARK, FREESECT_MARK_OR_NOSTREAM, FREESECT_MARK_OR_NOSTREAM_INT, initializedWith} from "../src/utils";
+import {ENDOFCHAIN_MARK, FREESECT_MARK_OR_NOSTREAM, FREESECT_MARK_OR_NOSTREAM_INT, initializedWidth} from "../src/utils";
 import {Sectors} from "../src/Sectors";
 import {FixedSizeChunkedDataview} from "../src/dataview/FixedSizeChunkedDataview";
 import { expect } from "chai";
@@ -13,7 +13,7 @@ describe('Sectors test', () => {
     });
 
     it('retrieve current number of sectors allocated', () => {
-        const data = initializedWith(4 * 512, 0);
+        const data = initializedWidth(4 * 512, 0);
         const sectors = new Sectors(new FixedSizeChunkedDataview(512, data), header);
         expect(sectors.sector(0)).not.eq(null);
         expect(sectors.sector(1)).not.eq(null);
@@ -27,25 +27,25 @@ describe('Sectors test', () => {
         const sectors = new Sectors(backedDataView, header);
         const allocated = sectors.allocate();
         expect(allocated).not.eq(null);
-        expect(allocated.getData()).to.deep.eq(initializedWith(512, FREESECT_MARK_OR_NOSTREAM));
+        expect(allocated.getData()).to.deep.eq(initializedWidth(512, FREESECT_MARK_OR_NOSTREAM));
         expect(backedDataView.getSize()).eq(Header.HEADER_LENGTH);
     });
 
     it('allocate FAT sector', () => {
-        const backedDataView = new FixedSizeChunkedDataview(Header.HEADER_LENGTH, initializedWith(Header.HEADER_LENGTH, 5));
+        const backedDataView = new FixedSizeChunkedDataview(Header.HEADER_LENGTH, initializedWidth(Header.HEADER_LENGTH, 5));
         const sectors = new Sectors(backedDataView, header);
         const allocated = sectors.allocate();
         expect(allocated).not.eq(null);
-        expect(allocated.getData()).to.deep.eq(initializedWith(Header.HEADER_LENGTH, FREESECT_MARK_OR_NOSTREAM));
+        expect(allocated.getData()).to.deep.eq(initializedWidth(Header.HEADER_LENGTH, FREESECT_MARK_OR_NOSTREAM));
         expect(backedDataView.getSize()).eq(1024);
     });
 
     it('allocate DIFAT sector', () => {
-        const backedDataView = new FixedSizeChunkedDataview(Header.HEADER_LENGTH, initializedWith(Header.HEADER_LENGTH, 5));
+        const backedDataView = new FixedSizeChunkedDataview(Header.HEADER_LENGTH, initializedWidth(Header.HEADER_LENGTH, 5));
         const sectors = new Sectors(backedDataView, header);
         const allocated = sectors.allocateDIFAT();
         expect(allocated).not.eq(null);
-        const sample = initializedWith(Header.HEADER_LENGTH, FREESECT_MARK_OR_NOSTREAM);
+        const sample = initializedWidth(Header.HEADER_LENGTH, FREESECT_MARK_OR_NOSTREAM);
         sample.splice(508, 4, ...ENDOFCHAIN_MARK);
         expect(allocated.getData()).to.deep.eq(sample);
         expect(backedDataView.getSize()).eq(1024);

@@ -2,7 +2,7 @@ import {FAT} from "../alloc/FAT";
 import {MiniFAT} from "../alloc/MiniFAT";
 import {Header} from "../Header";
 import {Sectors} from "../Sectors";
-import {ENDOFCHAIN_MARK_INT, FREESECT_MARK_OR_NOSTREAM_INT, initializedWith} from "../utils";
+import {ENDOFCHAIN_MARK_INT, FREESECT_MARK_OR_NOSTREAM_INT, initializedWidth} from "../utils";
 import {VariableSizeChunkedDataView} from "../dataview/VarSizeChunkedDataview";
 import {CFDataview} from "../dataview/СFDataview";
 import {Sector} from "../dataview/Sector";
@@ -33,7 +33,7 @@ export class MiniStreamRW implements StreamRW {
 
     read(startingSector: number, lengthOrFromIncl: number, toExcl?: number): number[] {
         if(toExcl == null) {
-            const result = initializedWith(lengthOrFromIncl, 0);
+            const result = initializedWidth(lengthOrFromIncl, 0);
             let position = 0;
             for (const sectorNumber of this.miniFAT.buildChain(startingSector)) {
                 if (lengthOrFromIncl > 0) {

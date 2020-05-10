@@ -1,7 +1,7 @@
 import {FAT} from "../alloc/FAT";
 import {Header} from "../Header";
 import {Sectors} from "../Sectors";
-import {initializedWith} from "../utils";
+import {initializedWidth} from "../utils";
 import {VariableSizeChunkedDataView} from "../dataview/VarSizeChunkedDataview";
 import {StreamRW} from "./StreamRW";
 
@@ -19,7 +19,7 @@ export class RegularStreamRW implements StreamRW {
 
     read(startingSector: number, lengthOrFromIncl: number, toExcl?: number): number[] {
         if(toExcl == null) {
-            const result = initializedWith(lengthOrFromIncl, 0);
+            const result = initializedWidth(lengthOrFromIncl, 0);
             let positionInResult = 0;
             for (const sectorPosition of this.fat.buildChain(startingSector)) {
                 if (lengthOrFromIncl > 0) {
