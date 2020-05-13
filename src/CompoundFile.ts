@@ -33,6 +33,10 @@ export class CompoundFile {
         return new CompoundFile(new FixedSizeChunkedDataview(512, bytes));
     }
 
+    public static fromUint8Array(bytes: Uint8Array): CompoundFile {
+        return new CompoundFile(new FixedSizeChunkedDataview(512,  [].slice.call(bytes)));
+    }
+
     constructor(dataView?: CFDataview) {
         const emptyFile = dataView == null;
         if(emptyFile) {
