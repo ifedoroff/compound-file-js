@@ -13,7 +13,10 @@
     "build": "npm-run-all clean test lint build:tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "ifedoroff",
+    "url": "https://github.com/ifedoroff"
+  },
   "license": "ISC",
   "devDependencies": {
     "@babel/cli": "^7.8.3",
@@ -41,5 +44,12 @@
     "long": "^4.0.0",
     "ts-treemap": "^1.0.0",
     "utf16-char-codes": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ifedoroff/compound-file-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ifedoroff/compound-file-js/issues"
   }
 }
