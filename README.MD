@@ -5,24 +5,34 @@ Allows reading existing files, creation of the/write operation
 
 To parse existing Compound Binary File:
 
-    const reader = new FileReader(); 
-    reader.onload = function() { 
-        var arrayBuffer = reader.result; 
-        var cfb = CompoundFile.fromUint8Array(new Uint8Array(arrayBuffer));
-        const rootStorage: RootStorageDirectoryEntry = cfb.getRootStorage();
-        const subStorages: StorageDirectoryEntry[] = rootStorage.storages();
-        const subStreams: StreamDirectoryEntry[] = rootStorage.streams();
-        // etc.
- 	}
- 	reader.readAsArrayBuffer(input.files[0]);
- 	
+```js
+
+const {CompoundFile} = require('compound-binary-file-js');
+
+const reader = new FileReader(); 
+reader.onload = () => { 
+    const arrayBuffer = reader.result; 
+    const cfb = CompoundFile.fromUint8Array(new Uint8Array(arrayBuffer));
+    const rootStorage = cfb.getRootStorage();
+    const subStorages = rootStorage.storages();
+    const subStreams = rootStorage.streams();
+    // etc.
+};
+
+reader.readAsArrayBuffer(input.files[0]);
+```
+
 Or alternatively you may use the following syntax if you read file as number[]:
  	
  	var cfb = CompoundFile.fromUint8Array([...arrayOfBytes]);
  	
 To create new Compound File: 
 
-    const cfb = CompoundFile.empty();
-    const storage1: StorageDirectoryEntry = cfb.getRootStorage().addStorage('storage1');
-    const stream1: StreamDirectoryEntry = storage1.addStream('stream1', [1,2,3,4]);
-    const fileBytes: number[] = cfb.asBytes();
+```js
+const {CompoundFile} = require('compound-binary-file-js');
+
+const cfb = CompoundFile.empty();
+const storage1 = cfb.getRootStorage().addStorage('storage1');
+const stream1 = storage1.addStream('stream1', [1,2,3,4]);
+const fileBytes = cfb.asBytes();
+```
