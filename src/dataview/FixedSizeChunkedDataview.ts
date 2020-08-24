@@ -15,11 +15,12 @@ export class FixedSizeChunkedDataview implements CFDataview {
         this.chunkSize = chunkSize;
         if(dataChunks != null) {
             if(typeof dataChunks[0] === 'number') {
-                if(dataChunks.length % chunkSize !== 0) throw new Error();
-                const dataLength = dataChunks.length;
-                const rawView = new SimpleDataview(dataChunks as number[]);
-                for (let i = 0; i < dataLength; i += 512) {
-                    this.chunks.push(new ReferencingSubview(rawView, i, i + 512));
+                if(dataChunks.length % chunkSize === 0) {
+                    const dataLength = dataChunks.length;
+                    const rawView = new SimpleDataview(dataChunks as number[]);
+                    for (let i = 0; i < dataLength; i += 512) {
+                        this.chunks.push(new ReferencingSubview(rawView, i, i + 512));
+                    }
                 }
             } else {
                 this.chunks.push(...(dataChunks as CFDataview[]));
