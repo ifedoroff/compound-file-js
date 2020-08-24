@@ -1,5 +1,5 @@
 {
-  "name": "compound-binary-file-js",
+  "name": "@spamscanner/compound-binary-file-js",
   "version": "1.0.8",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
