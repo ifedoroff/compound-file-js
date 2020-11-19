@@ -12,7 +12,15 @@
     "build:tsc": "tsc",
     "build": "npm-run-all clean test lint build:tsc"
   },
-  "keywords": [],
+  "keywords": [
+    "Compound File Binary File Format",
+    "Compound",
+    "Binary",
+    "CFB",
+    "CFBF",
+    "MS-CFB",
+    "Microsoft"
+  ],
   "author": {
     "name": "ifedoroff",
     "url": "https://github.com/ifedoroff"
