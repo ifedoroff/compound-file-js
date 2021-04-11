@@ -7,6 +7,7 @@ import {StreamHolder} from "../src/stream/StreamHolder";
 import {StorageDirectoryEntry} from "../src/directory/StorageDirectoryEntry";
 import { expect } from "chai";
 import {CompoundFile} from "../src/CompoundFile";
+import exp = require("constants");
 
 describe('Storage Directory Entry test', () => {
     let data: number[];
@@ -49,6 +50,7 @@ describe('Storage Directory Entry test', () => {
         expect(rootStorage.findChild((directoryEntry => directoryEntry.getDirectoryEntryName().toUpperCase() === "storage2".toUpperCase()))).not.eq(null);
         expect(rootStorage.findChild<StreamDirectoryEntry>((directoryEntry => directoryEntry.getDirectoryEntryName().toUpperCase() === "stream1".toUpperCase())).getStreamData()).to.deep.eq([1,2,3,4,5]);
         expect(storage1.findChild<StreamDirectoryEntry>((directoryEntry => directoryEntry.getDirectoryEntryName().toUpperCase() === "stream11".toUpperCase())).getStreamData()).to.deep.eq([5,4,3,2,1]);
+        expect(rootStorage.findChild(dirEntry => "missing" === dirEntry.getDirectoryEntryName())).eq(undefined);
     });
 
     it('find children', () => {

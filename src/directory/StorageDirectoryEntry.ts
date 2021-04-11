@@ -44,8 +44,12 @@ export class StorageDirectoryEntry extends DirectoryEntry {
     }
 
     findChild<T extends DirectoryEntry>(predicate: (dirEntry: DirectoryEntry) => boolean) {
-        let result: T = null;
-        this.eachChild((directoryEntry: DirectoryEntry) => result = directoryEntry as T, predicate);
+        let result: T = undefined;
+        this.eachChild((directoryEntry: DirectoryEntry) => {
+            if(predicate(directoryEntry)) {
+                result = directoryEntry as T
+            }
+        }, predicate);
         return result;
     }
 
