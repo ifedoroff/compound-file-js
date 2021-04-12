@@ -15,7 +15,7 @@ export class FixedSizeChunkedDataview implements CFDataview {
         this.chunkSize = chunkSize;
         if(dataChunks != null) {
             if(typeof dataChunks[0] === 'number') {
-                if(dataChunks.length % chunkSize !== 0) throw new Error();
+                if(dataChunks.length % chunkSize !== 0) throw new Error(`The passed bytes array should be divisible by chunk size. Actual array size : ${dataChunks.length}; chunk size: ${chunkSize}.`);
                 const dataLength = dataChunks.length;
                 const rawView = new SimpleDataview(dataChunks as number[]);
                 for (let i = 0; i < dataLength; i += 512) {
